@@ -1,4 +1,12 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gif4work/const.dart';
+import 'package:http/http.dart' as http;
+
+import 'api/ApiResponse.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,13 +36,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  List<Data> images = [];
 
   @override
   Widget build(BuildContext context) {
@@ -42,25 +44,62 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Container(
+        padding: EdgeInsets.only(left: 32, right: 32),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+          children: [
+            TextFormField(
+              decoration: InputDecoration(labelText: "Search text"),
+              style: TextStyle(fontSize: 20.0, color: Colors.black),
+              textInputAction: TextInputAction.search,
+              onFieldSubmitted: onSearchPressed,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) => Card(
+                  child: Column(
+                    children: <Widget>[
+                      CachedNetworkImage(
+                        imageUrl: images[index]?.images?.previewGif?.url,
+                        placeholder: (BuildContext context, String url) =>
+                            Placeholder(
+                          fallbackWidth: 320,
+                          fallbackHeight: 240,
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                itemCount: images.length,
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
     );
+  }
+
+  void onSearchPressed(String request) {
+    Fluttertoast.showToast(msg: 'request: $request');
+    _getData(request).then((response) {
+      if (response.statusCode == 200) {
+        ApiResponse apiResponse =
+            ApiResponse.fromJson(jsonDecode(response.body));
+        print('data length: ${apiResponse.data.length}');
+        setState(() {
+          images = apiResponse.data;
+        });
+      } else {
+        print(response.statusCode);
+      }
+    }).catchError((error) {
+      debugPrint(error.toString());
+    });
+  }
+
+  Future<http.Response> _getData(String request) async {
+    final url = '$giphyApiUrl$request';
+    return await http.get(url);
   }
 }
