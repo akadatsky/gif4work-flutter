@@ -99,7 +99,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<http.Response> _getData(String request) async {
-    final url = '$giphyApiUrl$request';
-    return await http.get(url);
+    var queryParameters = {
+      'api_key': giphyApiKey,
+      'q': request,
+    };
+    var uri = Uri.https(giphyAuthority, giphyPath, queryParameters);
+    return await http.get(uri);
   }
 }
