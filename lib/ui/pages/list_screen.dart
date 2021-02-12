@@ -1,22 +1,43 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gif4work/api/ApiResponse.dart';
-import 'package:gif4work/const.dart';
-import 'package:http/http.dart' as http;
+import 'package:gif4work/ui/block/block_list.dart';
+import 'package:gif4work/ui/block/events.dart';
+import 'package:gif4work/ui/block/states.dart';
 
 class ListScreen extends StatefulWidget {
+  final ListBloc bloc;
+  final ListScreenData screenData;
+
+  const ListScreen(this.bloc, this.screenData, {Key key}) : super(key: key);
+
   @override
   _ListScreenState createState() => _ListScreenState();
 }
 
 class _ListScreenState extends State<ListScreen> {
-  List<Data> images = [];
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    return BlocListener<ListBloc, ListState>(
+      cubit: widget.bloc,
+      listener: (context, state) {
+        if (state is ListLoadedState) {
+          setState(() {
+            widget.screenData.images = state.data;
+          });
+        }
+      },
+      child: _buildUi(),
+    );
+  }
+
+  Widget _buildUi() {
     return Scaffold(
       appBar: AppBar(
         title: Text("Gifs list"),
@@ -37,7 +58,9 @@ class _ListScreenState extends State<ListScreen> {
                   child: Column(
                     children: <Widget>[
                       CachedNetworkImage(
-                        imageUrl: images[index]?.images?.previewGif?.url,
+                        //imageUrl: images[index]?.images?.previewGif?.url,
+                        imageUrl: widget
+                            .screenData.images[index]?.images?.previewGif?.url,
                         placeholder: (BuildContext context, String url) =>
                             Placeholder(
                           fallbackWidth: 320,
@@ -48,7 +71,7 @@ class _ListScreenState extends State<ListScreen> {
                     ],
                   ),
                 ),
-                itemCount: images.length,
+                itemCount: widget.screenData.images.length,
               ),
             ),
           ],
@@ -58,29 +81,10 @@ class _ListScreenState extends State<ListScreen> {
   }
 
   void onSearchPressed(String request) {
-    Fluttertoast.showToast(msg: 'request: $request');
-    _getData(request).then((response) {
-      if (response.statusCode == 200) {
-        ApiResponse apiResponse =
-            ApiResponse.fromJson(jsonDecode(response.body));
-        print('data length: ${apiResponse.data.length}');
-        setState(() {
-          images = apiResponse.data;
-        });
-      } else {
-        print(response.statusCode);
-      }
-    }).catchError((error) {
-      debugPrint(error.toString());
-    });
+    widget.bloc.add(UpdateListEvent(request));
   }
+}
 
-  Future<http.Response> _getData(String request) async {
-    var queryParameters = {
-      'api_key': giphyApiKey,
-      'q': request,
-    };
-    var uri = Uri.https(giphyAuthority, giphyPath, queryParameters);
-    return await http.get(uri);
-  }
+class ListScreenData {
+  List<Data> images = [];
 }

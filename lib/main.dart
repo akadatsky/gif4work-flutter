@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:gif4work/ui/list_screen.dart';
+import 'package:gif4work/ui/block/block_list.dart';
+import 'package:gif4work/ui/pages/list_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -51,9 +52,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _openNextScreen() async {
+
+    final bloc = ListBloc();
+    final data = ListScreenData();
+
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => ListScreen()),
+      MaterialPageRoute(builder: (context) => ListScreen(bloc, data)),
     );
   }
 }
