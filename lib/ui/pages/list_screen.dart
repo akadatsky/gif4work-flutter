@@ -58,7 +58,6 @@ class _ListScreenState extends State<ListScreen> {
                   child: Column(
                     children: <Widget>[
                       CachedNetworkImage(
-                        //imageUrl: images[index]?.images?.previewGif?.url,
                         imageUrl: widget
                             .screenData.images[index]?.images?.previewGif?.url,
                         placeholder: (BuildContext context, String url) =>
