@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gif4work/api/ApiResponse.dart';
-import 'package:gif4work/ui/block/block_list.dart';
-import 'package:gif4work/ui/block/events.dart';
-import 'package:gif4work/ui/block/states.dart';
+import 'package:gif4work/ui/bloc/bloc_list.dart';
+import 'package:gif4work/ui/bloc/events.dart';
+import 'package:gif4work/ui/bloc/states.dart';
 
 class ListScreen extends StatefulWidget {
   final ListBloc bloc;

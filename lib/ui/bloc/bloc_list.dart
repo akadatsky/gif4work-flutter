@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gif4work/api/ApiResponse.dart';
 import 'package:gif4work/const.dart';
-import 'package:gif4work/ui/block/states.dart';
+import 'package:gif4work/ui/bloc/states.dart';
 import 'package:http/http.dart' as http;
 
 import 'events.dart';
