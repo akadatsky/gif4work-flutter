@@ -9,13 +9,18 @@ abstract class DataSource {
 }
 
 class NetworkDataSource implements DataSource {
+
+  http.Client _client;
+
+  NetworkDataSource(this._client);
+
   Future<List<Data>> loadData(String request) async {
     var queryParameters = {
       'api_key': giphyApiKey,
       'q': request,
     };
     var uri = Uri.https(giphyAuthority, giphyPath, queryParameters);
-    http.Response response = await http.get(uri);
+    http.Response response = await _client.get(uri);
 
     if (response.statusCode == 200) {
       ApiResponse apiResponse = ApiResponse.fromJson(jsonDecode(response.body));
