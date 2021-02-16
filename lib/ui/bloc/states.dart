@@ -1,4 +1,4 @@
-import 'package:gif4work/api/ApiResponse.dart';
+import 'package:gif4work/api/api_response.dart';
 
 abstract class ListState {}
 

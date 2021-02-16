@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gif4work/api/ApiResponse.dart';
+import 'package:gif4work/api/api_response.dart';
 import 'package:gif4work/data/data_source.dart';
 import 'package:gif4work/ui/bloc/states.dart';
 import 'package:injector/injector.dart';

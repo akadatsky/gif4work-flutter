@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:gif4work/api/ApiResponse.dart';
+import 'package:gif4work/api/api_response.dart';
 import 'package:gif4work/const.dart';
 import 'package:http/http.dart' as http;
 
