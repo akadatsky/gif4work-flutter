@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
+import 'package:gif4work/di/Di.dart';
 import 'package:gif4work/ui/bloc/bloc_list.dart';
 import 'package:gif4work/ui/pages/list_screen.dart';
 
 void main() {
+  Di.setup();
   runApp(MyApp());
 }
 

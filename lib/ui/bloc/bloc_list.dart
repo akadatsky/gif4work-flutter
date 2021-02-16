@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gif4work/api/ApiResponse.dart';
-import 'package:gif4work/const.dart';
+import 'package:gif4work/data/data_source.dart';
 import 'package:gif4work/ui/bloc/states.dart';
-import 'package:http/http.dart' as http;
+import 'package:injector/injector.dart';
 
 import 'events.dart';
 
@@ -14,21 +12,9 @@ class ListBloc extends Bloc<ListEvent, ListState> {
   @override
   Stream<ListState> mapEventToState(ListEvent event) async* {
     if (event is UpdateListEvent) {
-      var queryParameters = {
-        'api_key': giphyApiKey,
-        'q': event.request,
-      };
-      var uri = Uri.https(giphyAuthority, giphyPath, queryParameters);
-      http.Response response = await http.get(uri);
-
-      if (response.statusCode == 200) {
-        ApiResponse apiResponse =
-            ApiResponse.fromJson(jsonDecode(response.body));
-        print('data length: ${apiResponse.data.length}');
-        yield ListLoadedState(apiResponse.data);
-      } else {
-        print(response.statusCode);
-      }
+      DataSource dataSource = Injector.appInstance.get<DataSource>();
+      List<Data> result = await dataSource.loadData(event.request);
+      yield ListLoadedState(result);
     }
   }
 }
