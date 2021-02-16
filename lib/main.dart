@@ -9,6 +9,10 @@ void main() {
   runApp(MyApp());
 }
 
+Widget buildTestableWidget(Widget widget) {
+  return MediaQuery(data: MediaQueryData(), child: MaterialApp(home: widget));
+}
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
