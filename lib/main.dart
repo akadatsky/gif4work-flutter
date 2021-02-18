@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gif4work/di/di.dart';
 import 'package:gif4work/ui/bloc/bloc_list.dart';
@@ -7,10 +6,6 @@ import 'package:gif4work/ui/pages/list_screen.dart';
 void main() {
   Di.setup();
   runApp(MyApp());
-}
-
-Widget buildTestableWidget(Widget widget) {
-  return MediaQuery(data: MediaQueryData(), child: MaterialApp(home: widget));
 }
 
 class MyApp extends StatelessWidget {
@@ -58,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _openNextScreen() async {
-
     final bloc = ListBloc();
     final data = ListScreenData();
 
